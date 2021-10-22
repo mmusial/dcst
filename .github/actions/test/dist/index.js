@@ -8540,7 +8540,7 @@ async function validateCommitFilesAuthor(octokit, commit_info) {
 
         const original_scenario_folder_author_email = await getPathAuthorEmail(octokit, scenario_folder);
 
-        console.log(`filename: ${filename}, authors_match: ${original_scenario_folder_author === author_email}`);
+        console.log(`filename: ${filename}, authors_match: ${original_scenario_folder_author_email === author_email}`);
     }
 
     return true;
