@@ -8477,20 +8477,19 @@ async function getPathAuthor(octokit, path)
     console.log(json);
     
     if (!('data' in result)) {
-        return null;
+        return "qq";
     }
 
     const commit_info = result.data;
     if (!('commit' in commit_info)) {
-        return null;
+        return "aa";
     }
     const commit = commit_info.commit;
     if (!('author' in commit)) {
-        core.setFailed("No 'author' in commit!");
-        return false;
+        return "bb";
     }
 
-    return commit.author;
+    return commit.author.email;
 }
 
 
