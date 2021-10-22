@@ -8465,16 +8465,13 @@ async function getCommit(octokit, commit_ref) {
 
 
 
-async function getPathAuthor(octokit, path)
+async function getPathAuthorEmail(octokit, path)
 {
     const result = await octokit.request('GET /repos/{owner}/{repo}/commits?per_page=1&path={path}', {
         owner: "mmusial",
         repo: "dcst",
         path: path
       });
-    
-    const json = JSON.stringify(result, undefined, 2)
-    console.log(json);
     
     if (!('data' in result)) {
         return null;
@@ -8541,10 +8538,9 @@ async function validateCommitFilesAuthor(octokit, commit_info) {
             return false;
         }
 
-        const original_scenario_folder_author = await getPathAuthor(octokit, scenario_folder);
+        const original_scenario_folder_author_email = await getPathAuthorEmail(octokit, scenario_folder);
 
-
-        console.log(`filename: ${filename}, path_author: ${original_scenario_folder_author}`);
+        console.log(`filename: ${filename}, authors_match: ${original_scenario_folder_author === author_email}`);
     }
 
     return true;
@@ -8555,8 +8551,6 @@ async function validateCommitFilesAuthor(octokit, commit_info) {
 
 async function main(payload) {
     try {
-        const payload_json = JSON.stringify(payload, undefined, 2)    
-        
         if (!('pull_request' in payload)) {
             core.setFailed("No 'pull_request' in context payload");
             return;
@@ -8570,11 +8564,9 @@ async function main(payload) {
 
         const merge_commit_sha = pull_request.merge_commit_sha;
     
-        //console.log(`The event payload: ${payload_json}`);
         console.log(`Merge Commit SHA: ${merge_commit_sha}`);
         
         const repo_token = core.getInput('repo-token');
-        console.log(`Token: ${repo_token}`);
         const octokit = github.getOctokit(repo_token);
 
         const commit_info = await getCommit(octokit, merge_commit_sha);
