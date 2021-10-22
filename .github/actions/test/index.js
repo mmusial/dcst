@@ -15,7 +15,7 @@ function main(payload) {
         }
     
         const pull_request = payload.pull_request;
-        if (!('merge_commit_sha' in payload)) {
+        if (!('merge_commit_sha' in pull_request)) {
             core.setFailed("No 'merge_commit_sha' in pull_request payload");
             return;
         }
