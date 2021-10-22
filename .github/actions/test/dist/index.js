@@ -8465,6 +8465,34 @@ async function getCommit(octokit, commit_ref) {
 
 
 
+async function getPathAuthor(octokit, path)
+{
+    const result = await octokit.request('GET /repos/{owner}/{repo}/commits?path={path}', {
+        owner: "mmusial",
+        repo: "dcst",
+        path: path
+      });
+    
+    if (!('data' in result)) {
+        return null;
+    }
+
+    const commit_info = result.data;
+    if (!('commit' in commit_info)) {
+        return null;
+    }
+    const commit = commit_info.commit;
+    if (!('author' in commit)) {
+        core.setFailed("No 'author' in commit!");
+        return false;
+    }
+
+    return commit.author;
+}
+
+
+
+
 async function validateCommitFilesAuthor(octokit, commit_info) {
     if (!('commit' in commit_info)) {
         core.setFailed("No 'commit' in commit_info!");
@@ -8495,19 +8523,24 @@ async function validateCommitFilesAuthor(octokit, commit_info) {
 
     console.log(`author_email: ${author_email}`);
 
-    const regex = /Scenarios1\/.+\//;
+    const regex = /Scenarios\/.+\//;
 
     for (i = 0; i < files.length; i++) {
         const file = files[i];
         const filename = file.filename;
         const status = file.status;
         
-        const res = filename.match(regex);
-        if (res === null) {
+        const scenario_folder = filename.match(regex);
+        if (scenario_folder === null) {
+            // TODO: Proper validation error about trying to merge into invalid path
             return false;
         }
-        console.log(`filename: ${filename}, res: ${res}`);
-  }
+
+        const original_scenario_folder_author = await getPathAuthor(octokit, scenario_folder);
+
+
+        console.log(`filename: ${filename}, res: ${res}, path_author: ${original_scenario_folder_author}`);
+    }
 
     return true;
 }
