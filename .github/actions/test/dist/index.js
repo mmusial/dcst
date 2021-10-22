@@ -8495,6 +8495,10 @@ async function validateCommitFilesAuthor(octokit, commit_info) {
 
     console.log(`author_email: ${author_email}`);
 
+    for (i = 0; i < files.length; i++) {
+        console.log(`${i}) ${files[i].filename}`);
+    }
+
     return true;
 }
 
