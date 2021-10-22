@@ -7,7 +7,7 @@ try {
 
     
     if ('pull_request' in payload) {
-        core.setFailed(error.message);
+        core.setFailed("No 'pull_request' in context payload");
     }
 
     const pull_request = payload.pull_request;
