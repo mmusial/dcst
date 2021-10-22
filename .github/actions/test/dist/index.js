@@ -8485,9 +8485,15 @@ async function validateCommitFilesAuthor(octokit, commit_info) {
     }
 
     const author = commit.author;
-    const author_json = JSON.stringify(author, undefined, 2);
 
-    console.log(`author: ${author_json}`);
+    if (!('email' in commit)) {
+        core.setFailed("No 'email' in author!");
+        return false;
+    }
+    
+    const author_email = author.email;
+
+    console.log(`author_email: ${author_email}`);
 
     return true;
 }
