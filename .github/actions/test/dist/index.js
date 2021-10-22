@@ -8503,6 +8503,9 @@ async function validateCommitFilesAuthor(octokit, commit_info) {
         const status = file.status;
         
         const res = filename.match(regex);
+        if (res === null) {
+            return false;
+        }
         console.log(`filename: ${filename}, res: ${res}`);
   }
 
