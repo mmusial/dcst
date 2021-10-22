@@ -95,7 +95,7 @@ async function validateCommitFilesAuthor(octokit, commit_info) {
         const original_scenario_folder_author = await getPathAuthor(octokit, scenario_folder);
 
 
-        console.log(`filename: ${filename}, res: ${res}, path_author: ${original_scenario_folder_author}`);
+        console.log(`filename: ${filename}, path_author: ${original_scenario_folder_author}`);
     }
 
     return true;
