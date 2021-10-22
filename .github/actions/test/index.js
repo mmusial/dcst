@@ -4,6 +4,22 @@ const github = require('@actions/github');
 
 
 
+async function getCommit(octokit, commit_ref) {
+    const result = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}', {
+        owner: "mmusial",
+        repo: "dcst",
+        ref: commit_ref
+      });
+    
+    if (!('data' in result)) {
+        return null;
+    }
+
+    return result.data;
+}
+
+
+
 
 async function main(payload) {
     try {
@@ -29,11 +45,7 @@ async function main(payload) {
         console.log(`Token: ${repo_token}`);
         const octokit = github.getOctokit(repo_token);
 
-        const commit_info = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}', {
-            owner: "mmusial",
-            repo: "dcst",
-            ref: merge_commit_sha
-          });
+        const commit_info = await getCommit(octokit, merge_commit_sha);
         const commit_info_json = JSON.stringify(commit_info, undefined, 2);
         console.log(`${commit_info_json}`);
         
