@@ -8495,9 +8495,16 @@ async function validateCommitFilesAuthor(octokit, commit_info) {
 
     console.log(`author_email: ${author_email}`);
 
+    const regex = /Scenarios\/.+\//;
+
     for (i = 0; i < files.length; i++) {
-        console.log(`${i}) ${files[i].filename}`);
-    }
+        const file = files[i];
+        const filename = file.filename;
+        const status = file.status;
+        
+        const res = filename.search(regex);
+        console.log(`filename: ${filename}, res: ${res}`);
+  }
 
     return true;
 }
