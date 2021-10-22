@@ -21,6 +21,13 @@ async function getCommit(octokit, commit_ref) {
 
 
 
+async function validateCommitFilesAuthor(octokit, commit_info) {
+    return true;
+}
+
+
+
+
 async function main(payload) {
     try {
         const payload_json = JSON.stringify(payload, undefined, 2)    
@@ -49,6 +56,8 @@ async function main(payload) {
         const commit_info_json = JSON.stringify(commit_info, undefined, 2);
         console.log(`${commit_info_json}`);
         
+        const commit_files_validation_result = await validateCommitFilesAuthor(octokit, commit_info);
+        console.log(`commit_files_validation_result: ${commit_files_validation_result}`);
     } catch (error) {
         core.setFailed(error.message);
     }
