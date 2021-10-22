@@ -8473,6 +8473,9 @@ async function getPathAuthor(octokit, path)
         path: path
       });
     
+    const json = JSON.stringify(result, undefined, 2)
+    console.log(json);
+    
     if (!('data' in result)) {
         return null;
     }
