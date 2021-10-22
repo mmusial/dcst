@@ -24,9 +24,9 @@ async function main(payload) {
     
         console.log(`The event payload: ${payload_json}`);
         console.log(`Merge Commit SHA: ${merge_commit_sha}`);
-        console.log(`Token: ${github.token}`);
-
-
+        
+        const repo_token = core.getInput('repo-token');
+        console.log(`Token: ${repo_token}`);
         const octokit = github.getOctokit(github.token);
 
     } catch (error) {
