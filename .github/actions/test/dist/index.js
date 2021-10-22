@@ -8467,7 +8467,7 @@ async function getCommit(octokit, commit_ref) {
 
 async function getPathAuthor(octokit, path)
 {
-    const result = await octokit.request('GET /repos/{owner}/{repo}/commits?path={path}', {
+    const result = await octokit.request('GET /repos/{owner}/{repo}/commits?per_page=1&path={path}', {
         owner: "mmusial",
         repo: "dcst",
         path: path
@@ -8477,16 +8477,19 @@ async function getPathAuthor(octokit, path)
     console.log(json);
     
     if (!('data' in result)) {
-        return "qq";
+        return null;
+    }
+    if (result.data.length == 0) {
+        return null;
     }
 
-    const commit_info = result.data;
+    const commit_info = result.data[0];
     if (!('commit' in commit_info)) {
-        return "aa";
+        return null;
     }
     const commit = commit_info.commit;
     if (!('author' in commit)) {
-        return "bb";
+        return null;
     }
 
     return commit.author.email;
