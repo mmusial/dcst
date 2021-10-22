@@ -3,11 +3,16 @@ const github = require('@actions/github');
 
 
 
+// TODO: Read that from parameters
+const OWNER = "mmusial";
+const REPO = "dcst";
+
+
 
 async function getCommit(octokit, commit_ref) {
     const result = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}', {
-        owner: "mmusial",
-        repo: "dcst",
+        owner: OWNER,
+        repo: REPO,
         ref: commit_ref
       });
     
@@ -24,8 +29,8 @@ async function getCommit(octokit, commit_ref) {
 async function getPathAuthorEmail(octokit, path)
 {
     const result = await octokit.request('GET /repos/{owner}/{repo}/commits?per_page=1&path={path}', {
-        owner: "mmusial",
-        repo: "dcst",
+        owner: OWNER,
+        repo: REPO,
         path: path
       });
     
@@ -88,6 +93,7 @@ async function validateCommitFilesAuthor(octokit, commit_info) {
         const filename = file.filename;
         const status = file.status;
         
+        
         const scenario_folder = filename.match(regex);
         if (scenario_folder === null) {
             // TODO: Proper validation error about trying to merge into invalid path
@@ -95,8 +101,19 @@ async function validateCommitFilesAuthor(octokit, commit_info) {
         }
 
         const original_scenario_folder_author_email = await getPathAuthorEmail(octokit, scenario_folder);
+        //console.log(`filename: ${filename}, authors_match: ${original_scenario_folder_author_email === author_email}`);
+        if (original_scenario_folder_author_email !== author_email) {
+            // TODO: Proper validation error about original author doesn't match PR one
+            return false;
+        }
 
-        console.log(`filename: ${filename}, authors_match: ${original_scenario_folder_author_email === author_email}`);
+
+        // After author is validated
+        // TODO:
+        // 1) Check file name, only certain file name can be merged: info.json, scenario.community, download.manifest
+        // 2) Validate file content as much as possible
+        // 3) For status "adding", "updating" it's ok
+        // 4) FOr status "deleting", we need to discuss if we want to allow. if yes, then only for all files, like whole folder.
     }
 
     return true;
