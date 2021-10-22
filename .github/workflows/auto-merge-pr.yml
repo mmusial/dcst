@@ -17,7 +17,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Test Action
-        uses: mmusial/testaction@master
+        uses: ./.github/actions/test/
       #- name: List files
       #  run: ls -al
 
