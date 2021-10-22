@@ -42,7 +42,7 @@ async function validateCommitFilesAuthor(octokit, commit_info) {
 
     const author = commit.author;
 
-    if (!('email' in commit)) {
+    if (!('email' in author)) {
         core.setFailed("No 'email' in author!");
         return false;
     }
