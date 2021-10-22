@@ -29,7 +29,7 @@ async function main(payload) {
         console.log(`Token: ${repo_token}`);
         const octokit = github.getOctokit(repo_token);
 
-        const commit_info = await octokit.rest.commits({
+        const commit_info = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}', {
             owner: "mmusial",
             repo: "dcst",
             ref: merge_commit_sha
