@@ -8449,7 +8449,7 @@ const github = __nccwpck_require__(9117);
 
 
 
-function main(payload) {
+async function main(payload) {
     try {
         const payload_json = JSON.stringify(payload, undefined, 2)    
         
@@ -8468,6 +8468,11 @@ function main(payload) {
     
         console.log(`The event payload: ${payload_json}`);
         console.log(`Merge Commit SHA: ${merge_commit_sha}`);
+        console.log(`Token: ${github.token}`);
+
+
+        const octokit = github.getOctokit(github.token);
+
     } catch (error) {
         core.setFailed(error.message);
     }
