@@ -22,6 +22,29 @@ async function getCommit(octokit, commit_ref) {
 
 
 async function validateCommitFilesAuthor(octokit, commit_info) {
+    if (!('commit' in commit_info)) {
+        core.setFailed("No 'commit' in commit_info!");
+        return false;
+    }
+    if (!('files' in commit_info)) {
+        core.setFailed("No 'files' in commit_info!");
+        return false;
+    }
+
+    const commit = commit_info.commit;
+    const files = commit_info.files;
+
+    
+    if (!('author' in commit)) {
+        core.setFailed("No 'author' in commit!");
+        return false;
+    }
+
+    const author = commit.author;
+    const author_json = JSON.stringify(author, undefined, 2);
+
+    console.log(`author: ${author_json}`);
+
     return true;
 }
 
