@@ -8471,7 +8471,7 @@ async function main(payload) {
         
         const repo_token = core.getInput('repo-token');
         console.log(`Token: ${repo_token}`);
-        const octokit = github.getOctokit(github.token);
+        const octokit = github.getOctokit(repo_token);
 
     } catch (error) {
         core.setFailed(error.message);
