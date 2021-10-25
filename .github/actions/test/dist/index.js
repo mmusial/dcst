@@ -8452,7 +8452,6 @@ const OWNER = "mmusial";
 const REPO = "dcst";
 
 
-
 async function getCommit(octokit, commit_ref) {
     const result = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}', {
         owner: OWNER,
@@ -8591,6 +8590,7 @@ async function validateCommitFilesAuthor(octokit, pull_user, commit_info) {
 
 async function main(payload) {
     try {
+        console.log(JSON.stringify(process.env, undefined, 2));
         if (!('pull_request' in payload)) {
             core.setFailed("No 'pull_request' in context payload");
             return;
@@ -8619,6 +8619,10 @@ async function main(payload) {
         
         const commit_files_validation_result = await validateCommitFilesAuthor(octokit, pull_request.user, commit_info);
         console.log(`commit_files_validation_result: ${commit_files_validation_result}`);
+
+        if (commit_files_validation_result !== true) {
+            core.setFailed(`Pull-Request validation failed!`);
+        }
     } catch (error) {
         core.setFailed(error.message);
     }
