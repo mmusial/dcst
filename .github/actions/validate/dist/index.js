@@ -8542,7 +8542,7 @@ async function GetPRFiles(octokit, pull_request)
         owner: OWNER,
         repo: REPO,
         per_page: 1,
-        basehead: `${base_ref}..${head_ref}`
+        basehead: `${base_ref}...${head_ref}`
       });
 
     console.log(JSON.stringify(result, undefinedm, 2));
