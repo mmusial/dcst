@@ -17,8 +17,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Test Action
-        uses: ./.github/actions/test/
+      - name: Validate Action
+        uses: ./.github/actions/validate/
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
   
@@ -36,5 +36,7 @@ jobs:
     needs: validate
     if: failure()
     steps:
-      - name: Validation Failed
-        run: echo "PULL-REQUEST MERGE REJECTED"
+      - name: Validate Action
+        uses: ./.github/actions/validate/
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
