@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Auto-merge PR
+name: Auto-merge Community Scenario PR
 
 # Controls when the workflow will run
 on:
