@@ -8533,23 +8533,33 @@ async function getPullForCommit(octokit, commit_sha)
 
 
 
+async function GetPRFiles(octokit, pull_request)
+{
+    const base_ref = pull_request.base.label;
+    const head_ref = pull_request.head.label;
 
-async function validateCommitFilesAuthor(octokit, pull_user, commit_info) {
-    if (!('sha' in commit_info)) {
-        core.setFailed("No 'sha' in commit_info!");
+    const result = await octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}', {
+        owner: OWNER,
+        repo: REPO,
+        per_page: 1,
+        basehead: `${base_ref}...${head_ref}`
+      });
+
+    console.log(JSON.stringify(result, undefinedm, 2));
+
+    return [];
+}
+
+
+
+async function validateCommitFilesAuthor(octokit, pull_request) {
+    const files = await GetPRFiles(octokit, pull_request);
+    if (files.length == 0) {
         return false;
     }
-
-    if (!('files' in commit_info)) {
-        core.setFailed("No 'files' in commit_info!");
-        return false;
-    }
-
-    const files = commit_info.files;
-
     
     
-    const author_id = pull_user.id;
+    const author_id = pull_request.user.id;
 
     console.log(`pull author_id: ${author_id}`);
 
@@ -8599,26 +8609,17 @@ async function main(payload) {
         }
     
         const pull_request = payload.pull_request;
-        if (!('merge_commit_sha' in pull_request)) {
-            core.setFailed("No 'merge_commit_sha' in pull_request payload");
-            return;
-        }
         if (!('user' in pull_request)) {
             core.setFailed("No 'user' in pull_request payload");
             return;
         }
 
-        const merge_commit_sha = pull_request.merge_commit_sha;
-    
-        console.log(`Merge Commit SHA: ${merge_commit_sha}`);
+        console.log(JSON.stringify(pull_request, undefined, 2))
         
         const repo_token = core.getInput('repo-token');
         const octokit = github.getOctokit(repo_token);
 
-        const commit_info = await getCommit(octokit, merge_commit_sha);
-        //console.log(JSON.stringify(commit_info, undefined, 2));
-        
-        const commit_files_validation_result = await validateCommitFilesAuthor(octokit, pull_request.user, commit_info);
+        const commit_files_validation_result = await validateCommitFilesAuthor(octokit, pull_request);
         console.log(`commit_files_validation_result: ${commit_files_validation_result}`);
 
         if (commit_files_validation_result !== true) {

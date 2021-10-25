@@ -8467,11 +8467,11 @@ async function main(payload) {
         const repo_token = core.getInput('repo-token');
         const octokit = github.getOctokit(repo_token);
 
-        await octokit.request('PATCH /repos/{owner}/{repo}/pulls/{pull_number}', {
+        await octokit.request('PUT /repos/{owner}/{repo}/pulls/{pull_number}/merge', {
             owner: OWNER,
             repo: REPO,
             pull_number: pull_number,
-            state: "closed"
+            commit_title: "Auto-merge of community scenario Pull-Request"
           });
 
         // TODO: Comment why PR is closed
@@ -8483,6 +8483,7 @@ async function main(payload) {
 
 
 main(github.context.payload);
+
 })();
 
 module.exports = __webpack_exports__;
