@@ -28,7 +28,7 @@ jobs:
     needs: validate
     steps:
       - name: Validation Succeeded
-        run: echo "PULL-REQUEST MERGE REJECTED"
+        run: echo "PULL-REQUEST MERGE ACCEPTED"
       - name: Validation Failed
         if: ${{ failure() }}
         run: echo "PULL-REQUEST MERGE REJECTED"
