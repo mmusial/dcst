@@ -1,5 +1,5 @@
-name: 'Test Action'
-description: 'Test Action'
+name: 'Validate PR Action'
+description: 'Validates Community Scenario PR'
 inputs:
   repo-token:
     description: 'Repo access token'
