@@ -171,8 +171,7 @@ async function main(payload) {
         const octokit = github.getOctokit(repo_token);
 
         const commit_info = await getCommit(octokit, merge_commit_sha);
-        // const commit_info_json = JSON.stringify(commit_info, undefined, 2);
-        console.log(`${commit_info_json}`);
+        //console.log(JSON.stringify(commit_info, undefined, 2));
         
         const commit_files_validation_result = await validateCommitFilesAuthor(octokit, pull_request.user, commit_info);
         console.log(`commit_files_validation_result: ${commit_files_validation_result}`);
