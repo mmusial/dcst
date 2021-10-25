@@ -2,10 +2,9 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 
 
-
-// TODO: Read that from parameters
-const OWNER = "mmusial";
-const REPO = "dcst";
+const OWNER_REPO = process.env.GITHUB_REPOSITORY.split("/");
+const OWNER = OWNER_REPO[0];
+const REPO = OWNER_REPO[1];
 
 
 async function getCommit(octokit, commit_ref) {

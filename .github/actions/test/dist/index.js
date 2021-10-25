@@ -8446,10 +8446,9 @@ const core = __nccwpck_require__(611);
 const github = __nccwpck_require__(9117);
 
 
-
-// TODO: Read that from parameters
-const OWNER = "mmusial";
-const REPO = "dcst";
+const OWNER_REPO = process.env.GITHUB_REPOSITORY.split("/");
+const OWNER = OWNER_REPO[0];
+const REPO = OWNER_REPO[1];
 
 
 async function getCommit(octokit, commit_ref) {
