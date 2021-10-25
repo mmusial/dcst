@@ -8538,8 +8538,6 @@ async function GetPRFiles(octokit, pull_request)
     const base_ref = pull_request.base.label;
     const head_ref = pull_request.head.label;
 
-    console.log(`${base_ref}...${head_ref}`);
-
     const result = await octokit.request('GET /repos/{owner}/{repo}/compare/{basehead}', {
         owner: OWNER,
         repo: REPO,
@@ -8547,7 +8545,7 @@ async function GetPRFiles(octokit, pull_request)
         basehead: `${base_ref}...${head_ref}`
       });
 
-    console.log(JSON.stringify(result, undefinedm, 2));
+    console.log(JSON.stringify(result, undefined, 2));
 
     return [];
 }
