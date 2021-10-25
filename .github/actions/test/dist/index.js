@@ -8534,25 +8534,21 @@ async function getPullForCommit(octokit, commit_sha)
 
 
 async function validateCommitFilesAuthor(octokit, commit_info) {
-    if (!('commit' in commit_info)) {
-        core.setFailed("No 'commit' in commit_info!");
+    if (!('sha' in commit_info)) {
+        core.setFailed("No 'sha' in commit_info!");
         return false;
     }
+
     if (!('files' in commit_info)) {
         core.setFailed("No 'files' in commit_info!");
         return false;
     }
 
-    const commit = commit_info.commit;
     const files = commit_info.files;
 
     
-    if (!('sha' in commit)) {
-        core.setFailed("No 'sha' in commit!");
-        return false;
-    }
-
-    const author_id = getCommitPullUserId(octokit, commit.sha);
+    
+    const author_id = getCommitPullUserId(octokit, commit_info.sha);
 
     console.log(`pull author_id: ${author_id}`);
 
