@@ -55,7 +55,7 @@ async function getPathAuthorId(octokit, path)
 
 async function getCommitPullUserId(octokit, commit_sha)
 {
-    const pull_info = await getPullForCommit(octokit, commit_info.sha);
+    const pull_info = await getPullForCommit(octokit, commit_sha);
     if (!('user' in pull_info)) {
         return null;
     }
