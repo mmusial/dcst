@@ -27,8 +27,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: validate
     steps:
-      - name: Validation Succeeded
-        run: echo "PULL-REQUEST MERGE ACCEPTED"
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Validate Action
+        uses: ./.github/actions/pr-merge/
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
   
   pr-reject:
     # The type of runner that the job will run on
