@@ -8494,7 +8494,30 @@ async function getPathAuthorEmail(octokit, path)
         return null;
     }
 
+
+    const pull_info = await getPullForCommit(octokit, commit_info.sha);
+    console.log(`author_email: ${JSON.stringify(pull_info, undefined, 2)}`);
+
+
     return commit.author.email;
+}
+
+
+
+
+async function getPullForCommit(octokit, commit_sha)
+{
+    const result = await octokit.request('GET /repos/{owner}/{repo}/commits/{sha}/pulls', {
+        owner: OWNER,
+        repo: REPO,
+        sha: commit_sha
+      });
+
+    if (result.data.length == 0) {
+        return null;
+    }
+    
+    return result.data[0];
 }
 
 
