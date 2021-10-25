@@ -8542,12 +8542,17 @@ async function GetPRFiles(octokit, pull_request)
         owner: OWNER,
         repo: REPO,
         per_page: 1,
-        basehead: `${base_ref}...${head_ref}`
+        basehead: `${base_ref}..${head_ref}`
       });
+    
+    if (!('data' in result)) {
+        return [];
+    }
+    if (!('files' in result.data)) {
+        return [];
+    }
 
-    console.log(JSON.stringify(result, undefined, 2));
-
-    return [];
+    return result.data.files;
 }
 
 
@@ -8580,11 +8585,13 @@ async function validateCommitFilesAuthor(octokit, pull_request) {
 
         const original_scenario_folder_author_id = await getPathAuthorId(octokit, scenario_folder);
         console.log(`original author_id: ${author_id}`);
-        //console.log(`filename: ${filename}, authors_match: ${original_scenario_folder_author_email === author_email}`);
-        if (original_scenario_folder_author_id !== author_id) {
+        
+        const author_validation_result = (original_scenario_folder_author_id === null || original_scenario_folder_author_id === author_id);
+        if (!author_validation_result) {
             // TODO: Proper validation error about original author doesn't match PR one
             return false;
         }
+
 
 
         // After author is validated
