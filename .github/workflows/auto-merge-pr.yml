@@ -18,7 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Validate Action
-        uses: ./.github/actions/validate/
+        uses: mmusial/testaction/validate@master
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
   
@@ -27,10 +27,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: validate
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
       - name: Merge PR
-        uses: ./.github/actions/pr-merge/
+        uses: mmusial/testaction/pr-merge@master
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
   
@@ -40,9 +38,7 @@ jobs:
     needs: validate
     if: failure()
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
       - name: Close PR
-        uses: ./.github/actions/pr-reject/
+        uses: mmusial/testaction/pr-reject@master
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
