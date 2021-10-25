@@ -26,7 +26,7 @@ async function getCommit(octokit, commit_ref) {
 
 
 
-async function getPathAuthorEmail(octokit, path)
+async function getPathAuthorId(octokit, path)
 {
     const result = await octokit.request('GET /repos/{owner}/{repo}/commits?per_page=1&path={path}', {
         owner: OWNER,
@@ -46,16 +46,26 @@ async function getPathAuthorEmail(octokit, path)
         return null;
     }
     const commit = commit_info.commit;
-    if (!('author' in commit)) {
+    
+    return await getCommitPullUserId(octokit, commit_info.sha);
+}
+
+
+
+
+async function getCommitPullUserId(octokit, commit_sha)
+{
+    const pull_info = await getPullForCommit(octokit, commit_info.sha);
+    if (!('user' in pull_info)) {
         return null;
     }
 
+    const pull_user = pull_info.user;
+    if (!('id' in pull_user)) {
+        return null;
+    }
 
-    const pull_info = await getPullForCommit(octokit, commit_info.sha);
-    console.log(`author_email: ${JSON.stringify(pull_info, undefined, 2)}`);
-
-
-    return commit.author.email;
+    return pull_user.id;
 }
 
 
@@ -93,21 +103,14 @@ async function validateCommitFilesAuthor(octokit, commit_info) {
     const files = commit_info.files;
 
     
-    if (!('author' in commit)) {
-        core.setFailed("No 'author' in commit!");
+    if (!('sha' in commit)) {
+        core.setFailed("No 'sha' in commit!");
         return false;
     }
 
-    const author = commit.author;
+    const author_id = getCommitPullUserId(octokit, commit.sha);
 
-    if (!('email' in author)) {
-        core.setFailed("No 'email' in author!");
-        return false;
-    }
-    
-    const author_email = author.email;
-
-    console.log(`author_email: ${author_email}`);
+    console.log(`pull author_id: ${author_id}`);
 
     const regex = /Scenarios\/.+\//;
 
@@ -123,9 +126,10 @@ async function validateCommitFilesAuthor(octokit, commit_info) {
             return false;
         }
 
-        const original_scenario_folder_author_email = await getPathAuthorEmail(octokit, scenario_folder);
+        const original_scenario_folder_author_id = await getPathAuthorId(octokit, scenario_folder);
+        console.log(`original author_id: ${author_id}`);
         //console.log(`filename: ${filename}, authors_match: ${original_scenario_folder_author_email === author_email}`);
-        if (original_scenario_folder_author_email !== author_email) {
+        if (original_scenario_folder_author_id !== author_id) {
             // TODO: Proper validation error about original author doesn't match PR one
             return false;
         }
