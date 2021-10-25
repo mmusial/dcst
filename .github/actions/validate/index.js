@@ -164,6 +164,8 @@ async function main(payload) {
             return;
         }
 
+        console.log(JSON.stringify(pull_request, undefined, 2))
+
         const merge_commit_sha = pull_request.merge_commit_sha;
     
         console.log(`Merge Commit SHA: ${merge_commit_sha}`);
