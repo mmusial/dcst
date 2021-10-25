@@ -98,7 +98,7 @@ async function GetPRFiles(octokit, pull_request)
         owner: OWNER,
         repo: REPO,
         per_page: 1,
-        basehead: `${base_ref}..${head_ref}`
+        basehead: `${base_ref}...${head_ref}`
       });
     
     if (!('data' in result)) {
@@ -177,7 +177,7 @@ async function main(payload) {
             return;
         }
 
-        console.log(JSON.stringify(pull_request, undefined, 2))
+        //console.log(JSON.stringify(pull_request, undefined, 2))
         
         const repo_token = core.getInput('repo-token');
         const octokit = github.getOctokit(repo_token);
