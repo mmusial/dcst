@@ -118,6 +118,7 @@ async function validateCommitFilesAuthor(octokit, pull_user, commit_info) {
         
         
         const scenario_folder = filename.match(regex);
+        console.log(`${filename} = ${scenario_folder}`);
         if (scenario_folder === null) {
             // TODO: Proper validation error about trying to merge into invalid path
             return false;
