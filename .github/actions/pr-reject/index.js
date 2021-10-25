@@ -23,7 +23,12 @@ async function main(payload) {
         const repo_token = core.getInput('repo-token');
         const octokit = github.getOctokit(repo_token);
 
-        await octokit.pulls.update({ owner: OWNER, repo: REPO, state: "closed", pull_number: pull_number });
+        await octokit.request('PATCH /repos/{owner}/{repo}/pulls/{pull_number}', {
+            owner: OWNER,
+            repo: REPO,
+            pull_number: pull_number,
+            state: "closed"
+          });
 
         // TODO: Comment why PR is closed
         //await github.issues.createComment({...context.issue, body: msg})
