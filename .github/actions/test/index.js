@@ -89,7 +89,7 @@ async function getPullForCommit(octokit, commit_sha)
 
 
 
-async function validateCommitFilesAuthor(octokit, commit_info) {
+async function validateCommitFilesAuthor(octokit, pull_user, commit_info) {
     if (!('sha' in commit_info)) {
         core.setFailed("No 'sha' in commit_info!");
         return false;
@@ -104,7 +104,7 @@ async function validateCommitFilesAuthor(octokit, commit_info) {
 
     
     
-    const author_id = getCommitPullUserId(octokit, commit_info.sha);
+    const author_id = pull_user.id;
 
     console.log(`pull author_id: ${author_id}`);
 
@@ -157,6 +157,10 @@ async function main(payload) {
             core.setFailed("No 'merge_commit_sha' in pull_request payload");
             return;
         }
+        if (!('user' in pull_request)) {
+            core.setFailed("No 'user' in pull_request payload");
+            return;
+        }
 
         const merge_commit_sha = pull_request.merge_commit_sha;
     
@@ -169,7 +173,7 @@ async function main(payload) {
         const commit_info_json = JSON.stringify(commit_info, undefined, 2);
         console.log(`${commit_info_json}`);
         
-        const commit_files_validation_result = await validateCommitFilesAuthor(octokit, commit_info);
+        const commit_files_validation_result = await validateCommitFilesAuthor(octokit, pull_request.user, commit_info);
         console.log(`commit_files_validation_result: ${commit_files_validation_result}`);
     } catch (error) {
         core.setFailed(error.message);
