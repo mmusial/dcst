@@ -1,23 +1,18 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Auto-merge Community Scenario PR
-
-# Controls when the workflow will run
 on:
   pull_request:
     branches: [ main ]
-    
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+
 jobs:
   validate:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    outputs:
+      error-message: ${{ steps.validation-step.outputs.error-message }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Validate Action
+        id: validation-step
         uses: mmusial/testaction/validate@master
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
@@ -42,3 +37,4 @@ jobs:
         uses: mmusial/testaction/pr-reject@master
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+          message:  ${{ needs.validate.outputs.error-message }}
