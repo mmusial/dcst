@@ -36,7 +36,9 @@ jobs:
     needs: validate
     if: failure()
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Validate Action
-        uses: ./.github/actions/validate/
+        uses: ./.github/actions/pr-reject/
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
